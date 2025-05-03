@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
 
-    private val words = listOf("android", "studio", "kotlin", "game", "mobile", "cursor", "project", "activity", "java" )
+    private val words = listOf("android", "studio", "kotlin", "game", "mobile", "cursor", "project", "activity", "java")
     private lateinit var currentWord: String
     private lateinit var scrambledWord: String
 
@@ -25,17 +25,23 @@ class MainActivity : AppCompatActivity() {
             val guess = inputField.text.toString()
             if (guess.equals(currentWord, ignoreCase = true)) {
                 resultText.text = "✅ Правильно! Слово: $currentWord"
-                generateNewWord(scrambledText)
-                inputField.text.clear()
             } else {
-                resultText.text = "❌ Невірно. Спробуй ще раз!"
+                resultText.text = "❌ Невірно. Правильне слово було: $currentWord"
             }
+
+            generateNewWord(scrambledText)
+            inputField.text.clear()
         }
     }
 
     private fun generateNewWord(scrambledText: TextView) {
         currentWord = words.random()
-        scrambledWord = currentWord.toCharArray().apply { shuffle() }.concatToString()
+
+        // Перемешать до тех пор, пока не совпадает с оригиналом
+        do {
+            scrambledWord = currentWord.toCharArray().apply { shuffle() }.concatToString()
+        } while (scrambledWord.equals(currentWord, ignoreCase = true))
+
         scrambledText.text = scrambledWord
     }
 }
